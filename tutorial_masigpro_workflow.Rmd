@@ -1,0 +1,1188 @@
+---
+title: "maSigPro Tutorial"
+subtitle: "maSigPro R package workflow for time-course RNA-seq analysis for condition-specific temporal gene expression patterns"
+author: "Zoheb Khan"
+date: "`r format(09/04/2025)`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    toc_depth: 2
+    number_sections: false
+    code_folding: show
+    code_download: true
+    theme: flatly
+    highlight: pygments
+    fig_width: 10
+    fig_height: 6
+    fig_caption: true
+    df_print: kable
+---
+
+<style>
+/* ========== LAYOUT FIX: Prevent TOC overlap ========== */
+.col-md-9 {
+  width: 75%;
+  margin-left: 25%;
+}
+
+.col-md-3 {
+  width: 22%;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  height: calc(100vh - 50px);
+  overflow-y: auto;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+}
+
+@media (max-width: 992px) {
+  .col-md-9 {
+    width: 100%;
+    margin-left: 0;
+  }
+  .col-md-3 {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #dee2e6;
+  }
+}
+
+/* ========== Typography ========== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* ========== Code blocks ========== */
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+code {
+  font-family: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+}
+
+p code, li code {
+  background-color: #f1f3f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* ========== Tables ========== */
+table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+tr:hover {
+  background-color: #eef2f5;
+}
+
+/* GO enrichment tables - distinct styling */
+.go-table {
+  margin: 15px 0;
+}
+
+.go-table th {
+  background-color: #18bc9c;
+}
+
+/* ========== Section headers ========== */
+h1 {
+  color: #2c3e50;
+  font-size: 1.8em;
+  font-weight: 600;
+  border-bottom: 3px solid #18bc9c;
+  padding-bottom: 10px;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+h1:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: #2c3e50;
+  font-size: 1.4em;
+  font-weight: 600;
+  margin-top: 35px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  color: #34495e;
+  font-size: 1.15em;
+  font-weight: 600;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+/* ========== Callout boxes ========== */
+.note-box {
+  background-color: #e8f4fd;
+  border-left: 4px solid #2196F3;
+  padding: 15px 18px;
+  margin: 20px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.tip-box {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+  padding: 15px 18px;
+  margin: 20px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.warning-box {
+  background-color: #fff8e1;
+  border-left: 4px solid #ff9800;
+  padding: 15px 18px;
+  margin: 20px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.info-box {
+  background-color: #f3f4f6;
+  border-left: 4px solid #6b7280;
+  padding: 15px 18px;
+  margin: 20px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ========== Figure captions ========== */
+.figure {
+  margin: 25px 0;
+}
+
+figcaption, .caption {
+  font-style: italic;
+  color: #6c757d;
+  font-size: 13px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* ========== TOC styling ========== */
+.tocify {
+  border: none;
+  border-radius: 0;
+}
+
+.tocify-header {
+  font-size: 13px;
+}
+
+.tocify ul, .tocify li {
+  line-height: 1.8;
+}
+
+.tocify .active {
+  background-color: #18bc9c !important;
+  color: white !important;
+}
+
+/* ========== Horizontal rule ========== */
+hr {
+  border: none;
+  border-top: 1px solid #e1e4e8;
+  margin: 40px 0;
+}
+</style>
+
+```{r setup, include=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  eval = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE,
+  fig.width = 10,
+  fig.height = 6,
+  fig.align = "center",
+  out.width = "90%",
+  dpi = 300
+)
+
+options(warn = -1)
+```
+
+# Introduction
+
+This is a walkthrough/tutorial for how to cluster and analyze time-course bulk RNA-seq data using the [maSigPro](https://bioconductor.org/packages/maSigPro/) Bioconductor package in R. I created this workflow because there is just one tutorial available online for maSigPro, and it's fairly outdated at this point. I hope others can use this workflow as a guide for how to analyze ther data with maSigPro.
+
+## What is maSigPro?
+
+**maSigPro** (microarray Significant Profiles) is a method for clustering time-course RNA-seq/microarray data. It uses polynomial regression models to analyze time-series gene expression data. One reason why I like this package over normal hierarchical clustering is that maSigPro has parameters that allow you to finetune the stringency/thresholds for different parts of the gene clustering process, particularly between conditions. 
+
+Broadly, maSigPro does the follow:
+
+- Identifies genes with significant temporal expression changes
+- Detects condition-specific (e.g. genotype) patterns
+- Clusters genes by expression trajectory
+- Models non-linear temporal dynamics
+
+<div class="note-box">
+**maSigPro use case:** Experiments with multiple time points (ideally 3+ timepoints), 2+ conditions/groups, n=3 replicates per group. If you are interested in broad, temporal trends rather than single timepoint pairwise comparisons between condition/genotype, then maSigPro is particularly useful.
+</div>
+
+## required dependencies
+
+This workflow tutorial uses the fllowing required packages:
+
+```r
+# Bioconductor packages
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c("maSigPro", "clusterProfiler", "org.Hs.eg.db"))
+
+# CRAN packages
+install.packages(c("ggplot2", "dplyr", "tidyr", "reshape2",
+                   "patchwork", "pheatmap", "readr", "stringr"))
+```
+
+## Publicly available dataset for this workflow
+
+This tutorial uses the a publicly available time-course bulk RNA-seq data from the reference below. specifically, the input for maSigPro is normalized (can check the package vignette for more details). Briefly, I used edgeR TMM-normalized counts per million for this analysis.
+
+This dataset has two genotypes comparing D21 (disomic) vs T21 (trisomic) genotypes across three developmental time points (Day 6, 10, and 17).
+
+**Data source:** Martinez JL et al. *Transcriptional consequences of trisomy 21 on neural induction.* Front Cell Neurosci. 2024;18:1341141. [doi:10.3389/fncel.2024.1341141](https://doi.org/10.3389/fncel.2024.1341141)
+
+## Workflow Overview
+
+| Step | Description |
+|:-----|:------------|
+| 1 | Load libraries and data |
+| 2 | Filter lowly expressed genes |
+| 3 | Prepare experimental design matrix |
+| 4 | Create polynomial regression design |
+| 5 | Identify temporally significant genes |
+| 6 | Detect genotype-specific patterns |
+| 7 | Extract significant genes |
+| 8 | Cluster genes by trajectory |
+| 9 | Prepare visualization data |
+| 10 | Plot cluster profiles |
+| 11 | Generate summary statistics |
+| 12 | GO enrichment analysis |
+| 13 | Expression heatmaps |
+| 14 | Save results |
+
+# Step 1: Load required libraries and data
+
+Load the required packages and import expression data. maSigPro requires:
+
+- **Expression matrix:** Genes (rows) × Samples (columns), counts per million (CPM) or normalized counts. You ARE able to use raw counts (maSigPro has an internal normalization option), but I prefer to use TMM-normalized CPM because it's well-validated.
+- **Metadata:** Sample information with genotype, timepoint, and replicate columns that we will use to construct the experimental design 
+
+```{r step1-load-data, echo=TRUE, message=FALSE, warning=FALSE, error=FALSE}
+# Load required packages
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(dplyr)
+  library(tidyr)
+  library(reshape2)
+  library(patchwork)
+  library(pheatmap)
+  library(readr)
+  library(stringr)
+  library(maSigPro)
+  library(clusterProfiler)
+  library(org.Hs.eg.db)
+})
+
+# Load expression data and metadata from the publicly available dataset
+counts_cpm <- readRDS("data/counts/cpm/WC24_cpm.rds")
+metadata <- readRDS("data/metadata/WC24_metadata_clean.rds")
+
+# Create output directories
+fig_dir <- "results/figures/masigpro"
+res_dir <- "results/masigpro"
+dir.create(fig_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(res_dir, recursive = TRUE, showWarnings = FALSE)
+```
+
+### Look at metadata
+
+I will show the experimental design before proceeding so that it's clear how to adapt this workflow to your specific experimental design.
+
+```{r step1-inspect-metadata, echo=TRUE}
+# View complete metadata
+knitr::kable(metadata, caption = "Sample Metadata")
+
+# Sample counts per group
+geno_time_table <- table(metadata$genotype, metadata$timepoint)
+knitr::kable(geno_time_table,
+             caption = "Samples per Genotype and Timepoint",
+             col.names = c("Day 6", "Day 10", "Day 17"))
+```
+
+# Step 2: Filter Expression Matrix
+
+This step is optional, but I highly recommended adding some step in which you filter or remove genes whose expression is low at any given stage for a given condition/treatment. Here, I Rremove lowly expressed genes to reduce noise and improve statistical power for later steps in the maSigPro workflow. Genes must have mean CPM > 5 in at least one genotype-timepoint combination (ie, at a specific timepoint for a set of replicates for a genotype/stage)
+
+```{r step2-filter, echo=TRUE}
+min_cpm <- 5
+
+# select relevant samples
+metadata_filter <- metadata %>%
+  dplyr::filter(genotype %in% c("D21", "T21")) %>%
+  dplyr::select(sample_id, genotype, timepoint)
+
+# Calculate mean CPM per gene per genotype-timepoint group
+gene_means <- counts_cpm %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("gene_id") %>%
+  tidyr::pivot_longer(-gene_id, names_to = "sample_id", values_to = "cpm") %>%
+  dplyr::inner_join(metadata_filter, by = "sample_id") %>%
+  dplyr::group_by(gene_id, genotype, timepoint) %>%
+  dplyr::summarise(mean_cpm = mean(cpm), .groups = "drop") %>%
+  dplyr::group_by(gene_id) %>%
+  dplyr::summarise(max_mean_cpm = max(mean_cpm), .groups = "drop")
+
+# Keep genes passing the expression threshold
+keep_genes <- gene_means$gene_id[gene_means$max_mean_cpm > min_cpm]
+expr_mat <- counts_cpm[keep_genes, ]
+
+cat("Genes before filtering:", nrow(counts_cpm), "\n")
+cat("Genes after filtering:", nrow(expr_mat), "\n")
+```
+
+# Step 3: Prepare experimental design matrix
+
+maSigPro requires an experimental design matrix format with columns for:
+
+- **Time:** Numeric time point values for each timepoint in time-series
+- **Replicate:** Identifier for each replicate
+- **Group columns:** Binary (0 or 1) values for each experimental group
+
+I show the experimental matrix for maSigPro below
+
+```{r step3-prepare-design, echo=TRUE}
+# prepare metadata with numeric timepoints
+md <- metadata %>%
+  dplyr::filter(genotype %in% c("D21", "T21")) %>%
+  dplyr::select(sample_id, genotype, timepoint, rep) %>%
+  dplyr::mutate(timepoint = as.numeric(as.character(timepoint)))
+
+# Match sample order to expression matrix
+md <- md[match(colnames(expr_mat), md$sample_id), ]
+
+# Create design matrix
+edesign <- data.frame(
+  Time = md$timepoint,
+  Replicate = md$rep,
+  stringsAsFactors = FALSE
+)
+rownames(edesign) <- md$sample_id
+
+# Add binary genotype columns (0 or 1 encoding)
+genotype_matrix <- model.matrix(~ 0 + genotype, data = md)
+colnames(genotype_matrix) <- gsub("genotype", "", colnames(genotype_matrix))
+edesign <- cbind(edesign, as.data.frame(genotype_matrix))
+rownames(edesign) <- md$sample_id
+
+# Display design matrix
+knitr::kable(edesign, caption = "Experimental Design Matrix for maSigPro")
+```
+
+# Step 4: Create Polynomial Regression Design
+
+The make.design.matrix() function in maSigPro creates the regression design matrix. The `degree` parameter controls the polynomial order. Based on the vigentte, to calculate the parameter for your specific experiment, take the total number of timepoints and subtract by 1. unless you have 5+ timepoints, I would not exceed more than n=3 for degree, unless you expects genes to follow 'W' shape expression patterns.
+
+| Degree | Curve Type | Use Case |
+|:-------|:-----------|:---------|
+| 1 | Linear | Monotonic trends |
+| 2 | Quadratic | Peak/trough patterns |
+| 3 | Cubic | Complex dynamics |
+
+<div class="info-box">
+**Degree = 2** (quadratic) is typically fine for most time-course experimental designs, since it models 'U' shape expression dynamics, so it captures both linear trends and non-linear patterns.
+</div>
+
+```{r step4-create-design, echo=TRUE}
+poly_degree <- 2
+
+design <- maSigPro::make.design.matrix(
+  edesign = edesign,
+  degree = poly_degree,
+  time.col = 1,
+  repl.col = 2,
+  group.cols = 3:4
+)
+
+design$dis <- as.data.frame(design$dis)
+expr_mat <- expr_mat[, rownames(design$dis)]
+
+# Preview the regression design matrix
+knitr::kable(head(design$dis), caption = "Polynomial Regression Design Matrix (first 6 rows)")
+```
+
+# Step 5: Identify temporally significant Genes
+
+With the design matrix made, the next step in the maSigPro workflow is the `p.vector()` function. This function fits polynomial regression models to each gene and tests for significant temporal expression changes (regardless of genotype).
+
+**Parameters:**
+
+- `Q`: FDR threshold for significance (default: 0.05). You can try 0.01, though 0.05 is recommended by the authors in the original maSigPro paper.
+- `MT.adjust`: Multiple testing correction method ("BH" = Benjamini-Hochberg)
+- `min.obs`: Minimum observations required per gene. I would set this parameter equal to the number of observations you have per treatment/timepoint (ie, n=3 replicates in most cases).
+
+```{r step5-pvector, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+q_threshold <- 0.05
+
+fit <- maSigPro::p.vector(
+  data = expr_mat,
+  design = design$dis,
+  Q = q_threshold,
+  MT.adjust = "BH",
+  min.obs = nrow(md)
+)
+```
+
+```{r step5-result, echo=FALSE}
+cat("Genes with significant temporal expression:", length(fit$SELEC), "\n")
+```
+
+# Step 6: Detect Genotype-Specific Patterns
+
+The next step uses the `T.fit()` function, which applies a stepwise regression to identify genes with significantly different temporal patterns between genotypes (genotype × time interaction). In other words, this function finds differences between your two conditions.
+
+Note that there are several options to use for the regression method. here is use the method used by the authors in their tutorial (backward), though I tend to use two.ways.backward. You can try these different methods to see method most 'accurately' clusters your genes temporally + based on condition/treatment.
+
+**Stepwise regression methods in maSigPro:**
+
+-  maSigPro offers several options for what regression is 
+- `backward`: Start with full model, remove non-significant terms
+- `forward`: Start empty, add significant terms
+- `two.ways.backward` / `two.ways.forward`: Bidirectional selection (I tend to use this)
+
+```{r step6-tfit, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+alpha_threshold <- 0.05
+
+tfit <- maSigPro::T.fit(
+  fit,
+  step.method = "backward",
+  alfa = alpha_threshold
+)
+
+tfit$groups.vector <- design$groups.vector
+tfit$edesign <- design$edesign
+```
+
+# Step 7: Extract Significant Genes
+
+After identifying genes that are time-dependent and identifying genes that change temporally that differ between treatment/genotype, the next step is to identify genes with significant genotype-specific patterns using `get.siggenes()`. This R² threshold filters specifically for genes where the regression model explains a substantial proportion of variance. 
+
+In the original maSigPro paper, the authors note that Rsq of 0.7 performed well. However, there have been some cases when Rsq of 0.7 has resulted in 5000+ genes that are clustered at the of this workflow. Therefore, I often use higher values (0.7+), as higher values yield more reliable genes but fewer results. Lower values (0.5-0.6) include more genes but with less confident model fits. Adjust based on your sample size and downstream goals, and you can further check the quality of the fit by individually looking at genes within each cluster to assess the fidelity of the fitting.
+
+```{r step7-extract-sig, echo=TRUE}
+rsq_threshold <- 0.7
+
+sigs <- maSigPro::get.siggenes(
+  tstep = tfit,
+  rsq = rsq_threshold,
+  vars = "groups"
+)
+
+sig_genes <- rownames(sigs$sig.genes$T21vsD21$sig.profiles)
+cat("Genes with genotype-specific temporal patterns:", length(sig_genes), "\n")
+```
+
+# Step 8: Cluster Genes by Expression Trajectory
+
+Next, we cluster genes with similar temporal expression patterns using `see.genes()`.
+
+There are many options here to use for the distance metric and clustering method. Moreover, you can set k as the number of clusters. I won't get into the nuances and details of how to pick the specific distance metric, etc. The main point is: are you able to infer biological meaning from the clusters? A cluster defined by maSigPro is only meaningful if it has some biological meaning underlying it. One simple way to derive whether a cluster has meaningful biological information is the number of genes contained within it. If a cluster has 50 genes, it's likely that your clustering resolution is too fine.
+
+My suggestion would be to test various parameters. Ideally, regardless of the parameters you choose, the underlying biological insight you glean is largely the same. 
+
+**Clustering parameters:**
+
+| Parameter | Description |
+|:----------|:------------|
+| `k` | Number of clusters |
+| `dis` | Distance metric ("correlation", "euclidean") |
+| `cluster.method` | Clustering algorithm ("hclust", "kmeans") |
+
+```{r step8-cluster, echo=TRUE, message=FALSE, warning=FALSE, fig.width=14, fig.height=10, fig.cap="maSigPro cluster visualization showing gene expression trajectories grouped by similarity."}
+k_clusters <- 10
+
+edesign_clean <- design$edesign[, sapply(design$edesign, is.numeric)]
+
+clusters <- maSigPro::see.genes(
+  data = sigs$sig.genes$T21vsD21,
+  edesign = edesign_clean,
+  k = k_clusters,
+  dis = "correlation",
+  cluster.method = "hclust",
+  color.mode = "gray",
+  show.fit = FALSE
+)
+
+# Create cluster assignment table
+cl_assign <- data.frame(
+  gene_id = names(clusters$cut),
+  cluster = as.integer(clusters$cut),
+  stringsAsFactors = FALSE
+)
+
+# Summary of cluster sizes
+cluster_summary <- cl_assign %>%
+  dplyr::count(cluster, name = "n_genes") %>%
+  dplyr::arrange(cluster)
+
+knitr::kable(cluster_summary, caption = "Genes per Cluster")
+```
+
+# Step 9: Prepare Visualization Data
+
+Here, I convert expression data to long format and, using the maSigPro gene clusters from the previous part of thsi workflow, prepare to plot our data in lineplots by 'group'. I also calculate summary statistics for cluster profile plots.
+
+```{r step9-prepare-viz, echo=TRUE}
+expr_sub <- expr_mat[sig_genes, , drop = FALSE]
+
+# Reshape to long format for plotting
+expr_df <- reshape2::melt(
+  as.matrix(expr_sub),
+  varnames = c("gene_id", "sample_id"),
+  value.name = "cpm"
+)
+
+expr_df$genotype <- md$genotype[match(expr_df$sample_id, md$sample_id)]
+expr_df$timepoint <- as.numeric(md$timepoint[match(expr_df$sample_id, md$sample_id)])
+expr_df$cluster <- clusters$cut[expr_df$gene_id]
+
+# Calculate median expression per cluster/genotype/timepoint
+sum_df <- expr_df %>%
+  dplyr::group_by(cluster, genotype, timepoint) %>%
+  dplyr::summarise(median_cpm = median(cpm), .groups = "drop") %>%
+  dplyr::arrange(cluster, genotype, timepoint)
+
+cluster_counts <- expr_df %>%
+  dplyr::group_by(cluster) %>%
+  dplyr::summarise(n_genes = dplyr::n_distinct(gene_id), .groups = "drop")
+```
+
+# Step 10: Cluster Profile Visualization
+
+I now create line plots showing median expression trajectories for each cluster. I use median CPM here; you can use median CPM or mean CPM, or DESeq2 mean vst counts. We have separate lines for each genotype to show differential temporal kinetics of gene expression that are genotype-dependent.
+
+```{r step10-plot-function, echo=TRUE}
+geno_colors <- c("D21" = "#1F78B4", "T21" = "#E31A1C")
+
+plot_cluster <- function(df, counts_df, cl, show_legend = TRUE) {
+  n_genes <- counts_df$n_genes[counts_df$cluster == cl]
+  plot_data <- df[df$cluster == cl, ]
+  
+  p <- ggplot2::ggplot(
+    plot_data,
+    ggplot2::aes(x = timepoint, y = median_cpm, color = genotype, group = genotype)
+  ) +
+    ggplot2::geom_line(linewidth = 1) +
+    ggplot2::geom_point(size = 2.5) +
+    ggplot2::scale_color_manual(values = geno_colors, name = "Genotype") +
+    ggplot2::scale_x_continuous(
+      breaks = c(6, 10, 17),
+      labels = c("Day 6", "Day 10", "Day 17")
+    ) +
+    ggplot2::scale_y_continuous(
+      breaks = scales::pretty_breaks(n = 6),
+      expand = ggplot2::expansion(mult = c(0.1, 0.05))
+    ) +
+    ggplot2::labs(
+      title = paste0("Cluster ", cl, " (n=", n_genes, ")"),
+      x = "Timepoint",
+      y = "Median CPM"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(size = 11, hjust = 0.5),
+      axis.title.x = ggplot2::element_text(size = 10, margin = ggplot2::margin(t = 5)),
+      axis.title.y = ggplot2::element_text(size = 10, margin = ggplot2::margin(r = 5)),
+      axis.text = ggplot2::element_text(size = 9),
+      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+      legend.title = ggplot2::element_text(size = 10),
+      legend.text = ggplot2::element_text(size = 9),
+      legend.position = ifelse(show_legend, "right", "none")
+    )
+  
+  return(p)
+}
+```
+
+The following code saves individual cluster plots to files
+
+```{r step10-individual-plots, eval=FALSE, echo=TRUE}
+# Save individual cluster profile plots
+for (cl in sort(unique(sum_df$cluster))) {
+  p <- plot_cluster(sum_df, cluster_counts, cl, show_legend = TRUE)
+  ggplot2::ggsave(
+    filename = file.path(fig_dir, sprintf("cluster_%02d_profile.svg", cl)),
+    plot = p,
+    width = 6.5,
+    height = 4.5,
+    units = "in"
+  )
+}
+```
+
+```{r step10-combined-plot, echo=TRUE, fig.width=10, fig.height=18, fig.cap="Combined cluster profile plot showing all clusters"}
+combine_cluster_plots <- function(df, counts_df, ncol, nrow, output_path, width, height) {
+  all_clusters <- sort(unique(df$cluster))
+  plot_list <- lapply(all_clusters, function(cl) {
+    plot_cluster(df, counts_df, cl, show_legend = FALSE)
+  })
+  
+  combined <- patchwork::wrap_plots(plot_list, ncol = ncol, nrow = nrow) +
+    patchwork::plot_layout(guides = "collect") &
+    ggplot2::theme(legend.position = "right")
+  
+  ggplot2::ggsave(
+    filename = output_path,
+    plot = combined,
+    width = width,
+    height = height,
+    units = "in"
+  )
+  
+  return(combined)
+}
+
+combined_plot <- combine_cluster_plots(
+  df = sum_df,
+  counts_df = cluster_counts,
+  ncol = 2,
+  nrow = 5,
+  output_path = file.path(fig_dir, "all_clusters_combined.svg"),
+  width = 10,
+  height = 18
+)
+
+combined_plot
+```
+
+# Step 11: Summary Statistics
+
+I create a summary of key metrics from the maSigPro analysis here. if I decide to look at other parameter combinations, I can compare the results to the summary here.
+
+```{r step11-summary, echo=TRUE}
+summary_stats <- data.frame(
+  total_genes_tested = nrow(expr_mat),
+  significant_temporal = length(fit$SELEC),
+  significant_genotype_specific = length(sig_genes),
+  num_clusters = k_clusters,
+  polynomial_degree = poly_degree,
+  q_threshold = q_threshold,
+  rsq_threshold = rsq_threshold
+)
+
+readr::write_csv(summary_stats, file.path(res_dir, "summary_statistics.csv"))
+```
+
+```{r step11-display-summary, echo=FALSE}
+# Display summary as formatted table
+knitr::kable(summary_stats, 
+             caption = "Summary Statistics from maSigPro Analysis",
+             digits = 2)
+```
+
+# Step 12: Gene Ontology Enrichment
+
+To derive biological/pathway insight from the maSigPro analysis, I run GO overrepresentation analysis on each cluster to identify  biological processes associated with each cluster. This helps interpret the functional significance of co-expressed gene groups. For example, cluster 5, in which expression is decreased in T21 compared to D21, looks potentially be some type of progenitor gene expression associated cluster, given that the enriched GO terms are DNA replication-related (ie, proliferation genes). 
+
+GO term analysis like this allows you to derive BROAD insight -- you will have to dig deeper into the actual genes in each cluster. For example, are known marker of cell cycle progression in cluster 5? etc.
+
+A more intuitive example is cluster 6. The enriched GO terms for this cluster appear to be related to function of mature neurons. In this differentiation, the cells mature from neural progenitors to mature, differentiatd neurons. Corroborating this, the lineplot for cluster 6 shows faster acquisition of expression of cluster 6 genes in T21 compared to D21. One broad insight, then, would be that T21 appears to acquire a neuronal maturation-like transcriptional signature more quickly over time compared to D21. again, this finding should ideally be corroborated by your differential gene expression comparisons between T21 and D21 at each timepoint. 
+
+maSigPro allows us to visualize this 'temporally' and identify the genes driving by clustering them into modules.
+
+```{r step12-go-setup, echo=TRUE}
+go_dir_res <- file.path(res_dir, "go_enrichment")
+go_dir_figs <- file.path(fig_dir, "go_enrichment")
+dir.create(go_dir_res, recursive = TRUE, showWarnings = FALSE)
+dir.create(go_dir_figs, recursive = TRUE, showWarnings = FALSE)
+```
+
+### GO Enrichment Function
+
+```{r step12-go-function, echo=TRUE}
+run_cluster_go <- function(gene_list, cluster_id) {
+  # Skip clusters with too few genes
+  if (length(gene_list) < 5) return(NULL)
+
+  # Convert gene symbols to Entrez IDs
+  gene_entrez <- clusterProfiler::bitr(
+    gene_list,
+    fromType = "SYMBOL",
+    toType = "ENTREZID",
+    OrgDb = org.Hs.eg.db
+  )
+  if (nrow(gene_entrez) == 0) return(NULL)
+
+  # Run GO enrichment (Biological Process)
+  go_result <- clusterProfiler::enrichGO(
+    gene = gene_entrez$ENTREZID,
+    OrgDb = org.Hs.eg.db,
+    ont = "BP",
+    pAdjustMethod = "BH",
+    pvalueCutoff = 0.05,
+    qvalueCutoff = 0.05,
+    readable = TRUE
+  )
+  if (is.null(go_result) || nrow(as.data.frame(go_result)) == 0) return(NULL)
+
+  # Simplify redundant terms
+  go_simplified <- clusterProfiler::simplify(go_result, cutoff = 0.7)
+  go_df <- as.data.frame(go_simplified)
+  if (nrow(go_df) == 0) return(NULL)
+
+  # Save results
+  saveRDS(go_df, file.path(go_dir_res, paste0("cluster_", cluster_id, "_GO_results.rds")))
+  readr::write_csv(go_df, file.path(go_dir_res, paste0("cluster_", cluster_id, "_GO_results.csv")))
+
+  # Create dot plot for top terms
+  go_top <- go_df %>%
+    dplyr::slice_head(n = 10) %>%
+    dplyr::mutate(Description = stringr::str_wrap(Description, 40))
+
+  if (nrow(go_top) > 0) {
+    n_genes <- length(gene_list)
+
+    p <- ggplot2::ggplot(
+      go_top,
+      ggplot2::aes(x = -log10(pvalue),
+                   y = reorder(Description, -log10(pvalue)),
+                   size = Count)
+    ) +
+      ggplot2::geom_point(color = "#0DAD8D", alpha = 0.8) +
+      ggplot2::scale_size_continuous(range = c(3, 8), name = "Gene count") +
+      ggplot2::scale_y_discrete(position = "right") +
+      ggplot2::labs(
+        x = expression("-log"[10] * "(p-value)"),
+        y = NULL,
+        title = paste0("Cluster ", cluster_id),
+        subtitle = paste0("GO Biological Processes (n=", n_genes, " genes)")
+      ) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(
+        plot.title = ggplot2::element_text(size = 14, hjust = 0),
+        plot.subtitle = ggplot2::element_text(size = 12, hjust = 0),
+        axis.title.x = ggplot2::element_text(size = 11),
+        axis.text.y = ggplot2::element_text(size = 9, hjust = 0),
+        axis.text.x = ggplot2::element_text(size = 10),
+        legend.position = "bottom"
+      )
+
+    ggplot2::ggsave(
+      file.path(go_dir_figs, paste0("cluster_", cluster_id, "_GO_dotplot.svg")),
+      plot = p, width = 7, height = min(8, 3 + nrow(go_top) * 0.3)
+    )
+  }
+
+  return(go_df)
+}
+```
+
+### Run GO Enrichment on All Clusters
+
+```{r step12-run-go, echo=TRUE, message=FALSE, warning=FALSE}
+all_cluster_go_results <- list()
+
+for (cl in sort(unique(clusters$cut))) {
+  cluster_genes <- names(clusters$cut)[clusters$cut == cl]
+  go_res <- run_cluster_go(cluster_genes, cl)
+
+  if (!is.null(go_res)) {
+    all_cluster_go_results[[paste0("cluster_", cl)]] <- go_res
+  }
+}
+
+saveRDS(all_cluster_go_results, file.path(go_dir_res, "all_clusters_GO_results.rds"))
+cat("Clusters with significant GO enrichment:", length(all_cluster_go_results), "/", k_clusters, "\n")
+```
+
+### GO Results by Cluster
+
+```{r step12-go-summary, echo=FALSE, results='asis'}
+# Display GO enrichment results for each cluster with clean formatting
+for (cluster_name in names(all_cluster_go_results)) {
+  if (!is.null(all_cluster_go_results[[cluster_name]])) {
+    cluster_go <- all_cluster_go_results[[cluster_name]] %>%
+      dplyr::slice_head(n = 5) %>%
+      dplyr::transmute(
+        `Biological Process` = Description,
+        `P-value` = formatC(pvalue, format = "e", digits = 2),
+        `FDR` = formatC(qvalue, format = "e", digits = 2),
+        `Genes` = Count
+      )
+
+    if (nrow(cluster_go) > 0) {
+      cluster_num <- gsub("cluster_", "", cluster_name)
+      cat("\n\n**Cluster ", cluster_num, "**\n\n", sep = "")
+      print(knitr::kable(cluster_go,
+                         format = "html",
+                         table.attr = 'class="go-table"',
+                         row.names = FALSE,
+                         align = c("l", "r", "r", "r")))
+      cat("\n\n")
+    }
+  }
+}
+```
+
+# Step 13: Expression Heatmaps
+
+Perhaps a more visually 'intuitive' way of understanding the temporal expression of maSigPro-identified genes between D21 and T21 is by a heatmap. Here, I visualize expression patterns for each cluster using z-score normalized values in a heatmap generated by the pheatmap R package. Samples are grouped by genotype and ordered by timepoint (so first group of samples is D21, then T21).
+
+The heatmaps match the lineplot trend, but I think they are visually easier to interpret.
+
+```{r step13-heatmap-setup, echo=TRUE}
+if (file.exists("data/counts/vst/WC24_vst_counts.rds")) {
+  vst_mat <- readRDS("data/counts/vst/WC24_vst_counts.rds")
+} else {
+  vst_mat <- counts_cpm
+}
+
+heatmap_dir <- file.path(fig_dir, "heatmaps")
+dir.create(heatmap_dir, recursive = TRUE, showWarnings = FALSE)
+```
+
+```{r step13-heatmap-function, echo=TRUE}
+create_cluster_heatmap <- function(gene_list, 
+                                   vst_mat, 
+                                   meta, 
+                                   cluster_id,
+                                   output_path,
+                                   width = 7,
+                                   height = 7,
+                                   show_rownames = FALSE,
+                                   show_colnames = FALSE,
+                                   cluster_rows = TRUE,
+                                   cluster_cols = FALSE,
+                                   fontsize_row = 7,
+                                   winsorize_limit = 2) {
+  
+  genes_found <- intersect(gene_list, rownames(vst_mat))
+  
+  if (length(genes_found) < 2) {
+    return(NULL)
+  }
+  
+  # Order samples: D21 by timepoint, then T21 by timepoint
+  meta_d21 <- meta %>%
+    dplyr::filter(genotype == "D21") %>%
+    dplyr::arrange(timepoint)
+  
+  meta_t21 <- meta %>%
+    dplyr::filter(genotype == "T21") %>%
+    dplyr::arrange(timepoint)
+  
+  meta_ordered <- dplyr::bind_rows(meta_d21, meta_t21)
+  sample_order <- meta_ordered$sample_id
+  
+  vst_subset <- vst_mat[genes_found, sample_order]
+  vst_zscore <- t(scale(t(vst_subset)))
+  
+  vst_zscore[vst_zscore > winsorize_limit] <- winsorize_limit
+  vst_zscore[vst_zscore < -winsorize_limit] <- -winsorize_limit
+  
+  annotation_df <- meta_ordered %>%
+    dplyr::select(genotype, timepoint) %>%
+    dplyr::mutate(
+      Genotype = genotype,
+      Timepoint = factor(paste0("D", timepoint), levels = c("D6", "D10", "D17"))
+    ) %>%
+    dplyr::select(Genotype, Timepoint)
+  
+  annotation_colors <- list(
+    Genotype = c(D21 = "#1F78B4", T21 = "#E31A1C"),
+    Timepoint = c(D6 = "#66C2A5", D10 = "#FC8D62", D17 = "#8DA0CB")
+  )
+  
+  heatmap_colors <- grDevices::colorRampPalette(c(
+    "#053061", "#2166AC", "#4393C3", "#92C5DE",
+    "#D1E5F0", "#FDDBC7", "#F4A582", "#D6604D",
+    "#B2182B", "#67001F"
+  ))(100)
+  
+  quantile_breaks <- unique(quantile(as.vector(vst_zscore), 
+                                     probs = seq(0, 1, length.out = 101), 
+                                     na.rm = TRUE))
+  
+  # Gap position between D21 and T21 groups
+  n_d21 <- nrow(meta_d21)
+  gap_positions <- n_d21
+  
+  p <- pheatmap::pheatmap(
+    vst_zscore,
+    color = heatmap_colors,
+    clustering_distance_rows = "euclidean",
+    clustering_distance_cols = "euclidean",
+    clustering_method = "complete",
+    cluster_rows = cluster_rows,
+    cluster_cols = cluster_cols,
+    annotation_col = annotation_df,
+    annotation_colors = annotation_colors,
+    show_rownames = show_rownames,
+    show_colnames = show_colnames,
+    fontsize = 10,
+    fontsize_row = fontsize_row,
+    fontsize_col = 8,
+    border_color = NA,
+    scale = "none",
+        annotation_legend = TRUE,
+    annotation_names_col = FALSE,
+    legend = TRUE,
+    breaks = quantile_breaks,
+    gaps_col = gap_positions
+  )
+  
+  grDevices::png(output_path, width = width, height = height, units = "in", res = 300)
+  print(p)
+  grDevices::dev.off()
+  
+  return(p)
+}
+```
+
+```{r step13-display-heatmaps, echo=TRUE, fig.width=7, fig.height=6, fig.cap="Expression heatmaps for all clusters"}
+# Display heatmaps for all clusters
+all_clusters <- sort(unique(clusters$cut))
+
+for (cl in all_clusters) {
+  cluster_genes <- names(clusters$cut)[clusters$cut == cl]
+  
+  genes_found <- intersect(cluster_genes, rownames(vst_mat))
+  if (length(genes_found) < 2) next
+  
+  # Order samples: D21 samples by timepoint, then T21 samples by timepoint
+  meta_d21 <- md %>%
+    dplyr::filter(genotype == "D21") %>%
+    dplyr::arrange(timepoint)
+  
+  meta_t21 <- md %>%
+    dplyr::filter(genotype == "T21") %>%
+    dplyr::arrange(timepoint)
+  
+  meta_ordered <- dplyr::bind_rows(meta_d21, meta_t21)
+  sample_order <- meta_ordered$sample_id
+  
+  vst_subset <- vst_mat[genes_found, sample_order]
+  vst_zscore <- t(scale(t(vst_subset)))
+  
+  vst_zscore[vst_zscore > 3] <- 3
+  vst_zscore[vst_zscore < -3] <- -3
+  
+  annotation_df <- meta_ordered %>%
+    dplyr::select(genotype, timepoint) %>%
+    dplyr::mutate(
+      Genotype = genotype,
+      Timepoint = factor(paste0("D", timepoint), levels = c("D6", "D10", "D17"))
+    ) %>%
+    dplyr::select(Genotype, Timepoint)
+  
+  annotation_colors <- list(
+    Genotype = c(D21 = "#1F78B4", T21 = "#E31A1C"),
+    Timepoint = c(D6 = "#66C2A5", D10 = "#FC8D62", D17 = "#8DA0CB")
+  )
+  
+  heatmap_colors <- grDevices::colorRampPalette(c(
+    "#053061", "#2166AC", "#4393C3", "#92C5DE",
+    "#D1E5F0", "#FDDBC7", "#F4A582", "#D6604D",
+    "#B2182B", "#67001F"
+  ))(100)
+  
+  quantile_breaks <- unique(quantile(as.vector(vst_zscore), 
+                                     probs = seq(0, 1, length.out = 101), 
+                                     na.rm = TRUE))
+  
+  # Gap position between D21 and T21 groups
+  n_d21 <- nrow(meta_d21)
+  gap_positions <- n_d21
+  
+  n_genes <- length(cluster_genes)
+  show_names <- n_genes <= 50
+  
+  p <- pheatmap::pheatmap(
+    vst_zscore,
+    color = heatmap_colors,
+    clustering_distance_rows = "euclidean",
+    clustering_distance_cols = "euclidean",
+    clustering_method = "complete",
+    cluster_rows = TRUE,
+    cluster_cols = FALSE,
+    annotation_col = annotation_df,
+    annotation_colors = annotation_colors,
+    show_rownames = show_names,
+    show_colnames = FALSE,
+    fontsize = 10,
+    fontsize_row = 7,
+    fontsize_col = 8,
+    border_color = NA,
+    scale = "none",
+        annotation_legend = TRUE,
+    annotation_names_col = FALSE,
+    legend = TRUE,
+    breaks = quantile_breaks,
+    gaps_col = gap_positions,
+    main = paste0("Cluster ", cl, " (n=", n_genes, " genes)")
+  )
+  
+  print(p)
+}
+```
+
+The following code saves heatmaps to PNG files. Set `eval=TRUE` to run:
+
+```{r step13-create-heatmaps, eval=FALSE, echo=TRUE}
+# Save heatmaps to files
+for (cl in sort(unique(clusters$cut))) {
+  cluster_genes <- names(clusters$cut)[clusters$cut == cl]
+  
+  n_genes <- length(cluster_genes)
+  show_names <- n_genes <= 50
+  height_val <- min(8, max(4, n_genes * 0.08))
+  
+  create_cluster_heatmap(
+    gene_list = cluster_genes,
+    vst_mat = vst_mat,
+    meta = md,
+    cluster_id = cl,
+    output_path = file.path(heatmap_dir, paste0("cluster_", cl, "_heatmap.png")),
+    width = 5,
+    height = height_val,
+    show_rownames = show_names,
+    show_colnames = FALSE,
+    cluster_rows = TRUE,
+    cluster_cols = FALSE,
+    fontsize_row = 7,
+    winsorize_limit = 3
+  )
+}
+```
+
+# Step 14: Save Results
+
+Finally, I save the cluster assignments and analysis outputs for downstream use. Depending on the number of genes that are time-dependent, maSigPro can take 15-20 minutes to run and cluster your genes. Therefore I recommend saving the output of maSigPro immediately so that you don't have to re-run it every time.
+
+```{r step14-save, echo=TRUE}
+# Save cluster assignments
+readr::write_csv(cl_assign, file.path(res_dir, "cluster_assignments.csv"))
+saveRDS(cl_assign, file.path(res_dir, "cluster_assignments.rds"))
+
+cat("Results saved to:", res_dir, "\n")
+cat("Figures saved to:", fig_dir, "\n")
+```
+
+# Summary
+
+In summary, maSigPro is a useful R package for identified genes with genotype-specific temporal expression patterns and grouped them into functionally coherent clusters.
+
+If you have time-series bulk RNA-seq data with 3+ timepoints, and you have two groups of samples (whether that is treatment or genotype or some condition), then maSigPro allows you identify clusters of genes whose expression over time is temporally .
+
+While some maSigPro clusters are largely similar in expressio between the two groups, I think the main biological insight here 
+
+For example, cluster 10 is enriched for the GO term 'canonical Wnt signaling pathway.' In the paper that I obtained this data from, the authors discuss Wnt signaling pathway activity as being dampened or decreased in T21 compared to D21. Cluster 10 corroborates this claim, as . Furthermore, we can see that this cluster enriched for Wnt signaling pathway genes seems to be highest in expression during the neural progenitor phase. Hence, Wnt signaling could be modulating the transition of neural progenitor to mature neuron. Because expression of this cluster is DECREASED in T21 relative to D21, this suggests perhaps faster transition of neural progenitor to mature neuron in T21. As explained before, this finding of faster acquistion of mature neuron identity is corroborated by other clusters, such as cluster 6. 
+
+These are obviously broad claims that need further evidence to substantiate, but the goal of maSigPro is to give you direction for what directions/avenues you can pursue for your data.
+
+## Results Overview
+
+```{r final-summary, echo=FALSE}
+summary_table <- data.frame(
+  Metric = c("Genes tested",
+             "Significant temporal genes",
+             "Genotype-specific genes",
+             "Clusters identified",
+             "Clusters with GO enrichment"),
+  Value = c(format(nrow(expr_mat), big.mark = ","),
+            paste0(format(length(fit$SELEC), big.mark = ","),
+                   " (", round(100 * length(fit$SELEC) / nrow(expr_mat), 1), "%)"),
+            paste0(format(length(sig_genes), big.mark = ","),
+                   " (", round(100 * length(sig_genes) / nrow(expr_mat), 1), "%)"),
+            k_clusters,
+            length(all_cluster_go_results))
+)
+
+knitr::kable(summary_table, col.names = c("Metric", "Value"), align = c("l", "r"))
+```
+
+## Analysis Parameters
+
+```{r params-summary, echo=FALSE}
+params_table <- data.frame(
+  Parameter = c("Expression filter", "Polynomial degree", "FDR threshold (p.vector)",
+                "Alpha threshold (T.fit)", "R² threshold", "Number of clusters"),
+  Value = c(paste0("Mean CPM > ", min_cpm),
+            poly_degree,
+            q_threshold,
+            alpha_threshold,
+            rsq_threshold,
+            k_clusters)
+)
+
+knitr::kable(params_table, col.names = c("Parameter", "Value"), align = c("l", "r"))
+```
+
+## Output Files
+
+All results are saved to:
+
+- **Cluster assignments:** `results/masigpro/cluster_assignments.csv`
+- **Summary statistics:** `results/masigpro/summary_statistics.csv`
+- **GO enrichment:** `results/masigpro/go_enrichment/`
+- **Figures:** `results/figures/masigpro/`
+
+## References
+
+1. Conesa A, Nueda MJ, et al. (2006). maSigPro: a method to identify significantly differential expression profiles in time-course microarray experiments. *Bioinformatics*, 22(9):1096-1102. [doi:10.1093/bioinformatics/btl056](https://doi.org/10.1093/bioinformatics/btl056)
+
+2. Nueda MJ, Tarazona S, Conesa A. (2014). Next maSigPro: updating maSigPro bioconductor package for RNA-seq time series. *Bioinformatics*, 30(18):2598-2602. [doi:10.1093/bioinformatics/btu333](https://doi.org/10.1093/bioinformatics/btu333)
+
+# Session Information
+
+For reproducibility, the complete R session information is provided below.
+
+```{r session-info, echo=TRUE}
+sessionInfo()
+```

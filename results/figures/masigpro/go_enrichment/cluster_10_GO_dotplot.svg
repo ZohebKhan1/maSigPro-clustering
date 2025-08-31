@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='504.00pt' height='432.00pt' viewBox='0 0 504.00 432.00'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw1MDQuMDB8MC4wMHw0MzIuMDA='>
+    <rect x='0.00' y='0.00' width='504.00' height='432.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw0MzIuMDA=)'>
+<rect x='0.00' y='0.000000000000057' width='504.00' height='432.00' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNS40OHwzMzMuNTd8NDAuNTJ8MzUyLjM0'>
+    <rect x='5.48' y='40.52' width='328.09' height='311.82' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNS40OHwzMzMuNTd8NDAuNTJ8MzUyLjM0)'>
+<polyline points='30.12,352.34 30.12,40.52 ' style='stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='109.83,352.34 109.83,40.52 ' style='stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='189.53,352.34 189.53,40.52 ' style='stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='269.24,352.34 269.24,40.52 ' style='stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,334.00 333.57,334.00 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,303.43 333.57,303.43 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,272.86 333.57,272.86 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,242.29 333.57,242.29 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,211.72 333.57,211.72 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,181.15 333.57,181.15 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,150.58 333.57,150.58 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,120.01 333.57,120.01 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,89.44 333.57,89.44 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='5.48,58.86 333.57,58.86 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='69.97,352.34 69.97,40.52 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='149.68,352.34 149.68,40.52 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='229.39,352.34 229.39,40.52 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<polyline points='309.09,352.34 309.09,40.52 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<circle cx='318.66' cy='58.86' r='8.89' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='150.68' cy='89.44' r='8.89' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='125.60' cy='120.01' r='7.33' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='104.71' cy='150.58' r='3.56' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='83.18' cy='181.15' r='8.55' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='79.81' cy='211.72' r='8.18' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='48.50' cy='242.29' r='8.55' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='44.51' cy='272.86' r='8.55' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='21.82' cy='303.43' r='6.22' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='20.39' cy='334.00' r='7.33' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+</g>
+<g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw0MzIuMDA=)'>
+<text x='338.50' y='332.36' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='150.56px' lengthAdjust='spacingAndGlyphs'>positive regulation of protein catabolic</text>
+<text x='338.50' y='342.08' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='31.51px' lengthAdjust='spacingAndGlyphs'>process</text>
+<text x='338.50' y='306.65' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='125.05px' lengthAdjust='spacingAndGlyphs'>maintenance of protein location</text>
+<text x='338.50' y='266.36' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='111.02px' lengthAdjust='spacingAndGlyphs'>cell surface receptor protein</text>
+<text x='338.50' y='276.08' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='131.06px' lengthAdjust='spacingAndGlyphs'>serine/threonine kinase signaling</text>
+<text x='338.50' y='285.80' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='33.52px' lengthAdjust='spacingAndGlyphs'>pathway</text>
+<text x='338.50' y='245.51' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='116.52px' lengthAdjust='spacingAndGlyphs'>sensory system development</text>
+<text x='338.50' y='214.94' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='80.04px' lengthAdjust='spacingAndGlyphs'>kidney development</text>
+<text x='338.50' y='179.51' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='160.02px' lengthAdjust='spacingAndGlyphs'>transforming growth factor beta receptor</text>
+<text x='338.50' y='189.23' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='120.05px' lengthAdjust='spacingAndGlyphs'>superfamily signaling pathway</text>
+<text x='338.50' y='153.80' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='139.56px' lengthAdjust='spacingAndGlyphs'>morphogenesis of an epithelial bud</text>
+<text x='338.50' y='123.23' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='78.53px' lengthAdjust='spacingAndGlyphs'>eye morphogenesis</text>
+<text x='338.50' y='92.66' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='58.03px' lengthAdjust='spacingAndGlyphs'>regionalization</text>
+<text x='338.50' y='62.09' style='font-size: 9.00px;fill: #4D4D4D; font-family: "Arial";' textLength='130.56px' lengthAdjust='spacingAndGlyphs'>canonical Wnt signaling pathway</text>
+<text x='69.97' y='364.44' text-anchor='middle' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='13.91px' lengthAdjust='spacingAndGlyphs'>4.0</text>
+<text x='149.68' y='364.44' text-anchor='middle' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='13.91px' lengthAdjust='spacingAndGlyphs'>4.5</text>
+<text x='229.39' y='364.44' text-anchor='middle' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='13.91px' lengthAdjust='spacingAndGlyphs'>5.0</text>
+<text x='309.09' y='364.44' text-anchor='middle' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='13.91px' lengthAdjust='spacingAndGlyphs'>5.5</text>
+<text x='134.37' y='377.29' style='font-size: 11.00px; font-family: "Arial";' textLength='18.35px' lengthAdjust='spacingAndGlyphs'>-log</text>
+<text x='152.71' y='379.29' style='font-size: 7.70px; font-family: "Arial";' textLength='8.55px' lengthAdjust='spacingAndGlyphs'>10</text>
+<text x='161.27' y='377.29' style='font-size: 11.00px; font-family: "Arial";' textLength='43.42px' lengthAdjust='spacingAndGlyphs'>(p-value)</text>
+<text x='51.05' y='413.64' style='font-size: 11.00px; font-family: "Arial";' textLength='56.90px' lengthAdjust='spacingAndGlyphs'>Gene count</text>
+<circle cx='122.07' cy='409.70' r='3.56' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='155.20' cy='409.70' r='6.22' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='188.96' cy='409.70' r='7.33' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='224.47' cy='409.70' r='8.18' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<circle cx='262.05' cy='409.70' r='8.89' style='stroke-width: 0.71; stroke: #0DAD8D; stroke-opacity: 0.80; fill: #0DAD8D; fill-opacity: 0.80;' />
+<text x='136.19' y='412.85' style='font-size: 8.80px; font-family: "Arial";' textLength='4.90px' lengthAdjust='spacingAndGlyphs'>3</text>
+<text x='169.32' y='412.85' style='font-size: 8.80px; font-family: "Arial";' textLength='4.90px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text x='203.70' y='412.85' style='font-size: 8.80px; font-family: "Arial";' textLength='4.90px' lengthAdjust='spacingAndGlyphs'>7</text>
+<text x='240.33' y='412.85' style='font-size: 8.80px; font-family: "Arial";' textLength='4.90px' lengthAdjust='spacingAndGlyphs'>9</text>
+<text x='278.87' y='412.85' style='font-size: 8.80px; font-family: "Arial";' textLength='9.14px' lengthAdjust='spacingAndGlyphs'>11</text>
+<text x='5.48' y='32.52' style='font-size: 12.00px; font-family: "Arial";' textLength='212.93px' lengthAdjust='spacingAndGlyphs'>GO Biological Processes (n=115 genes)</text>
+<text x='5.48' y='15.50' style='font-size: 14.00px; font-family: "Arial";' textLength='63.78px' lengthAdjust='spacingAndGlyphs'>Cluster 10</text>
+</g>
+</svg>
