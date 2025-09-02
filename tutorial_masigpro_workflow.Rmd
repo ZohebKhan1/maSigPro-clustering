@@ -2,7 +2,7 @@
 title: "maSigPro Tutorial"
 subtitle: "maSigPro R package workflow for time-course RNA-seq analysis for condition-specific temporal gene expression patterns"
 author: "Zoheb Khan"
-date: "`r format(09/04/2025)`"
+date: "September 2, 2025"
 output:
   html_document:
     toc: true
