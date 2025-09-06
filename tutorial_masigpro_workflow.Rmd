@@ -468,6 +468,9 @@ With the design matrix made, the next step in the maSigPro workflow is the `p.ve
 - `min.obs`: Minimum observations required per gene. I would set this parameter equal to the number of observations you have per treatment/timepoint (ie, n=3 replicates in most cases).
 
 ```{r step5-pvector, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+# fdr-adjusted p-value threshold for significance
+# alternative values to consider: 0.01 (more stringent), 0.1 (more lenient)
+# the authors recommend 0.05 as a reasonable default for most rna-seq experiments
 q_threshold <- 0.05
 
 fit <- maSigPro::p.vector(
