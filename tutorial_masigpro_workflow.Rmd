@@ -500,10 +500,16 @@ Note that there are several options to use for the regression method. here is us
 - `two.ways.backward` / `two.ways.forward`: Bidirectional selection (I tend to use this)
 
 ```{r step6-tfit, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+# significance threshold for stepwise regression variable selection
+# alternative values: 0.01 (stricter, fewer terms), 0.1 (more permissive)
 alpha_threshold <- 0.05
 
 tfit <- maSigPro::T.fit(
   fit,
+  # stepwise regression method options:
+  # "backward" - starts with full model, removes non-significant terms
+  # "forward" - starts empty, adds significant terms iteratively
+  # "two.ways.backward" or "two.ways.forward" - bidirectional selection
   step.method = "backward",
   alfa = alpha_threshold
 )
