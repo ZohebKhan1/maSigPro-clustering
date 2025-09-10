@@ -533,7 +533,13 @@ sigs <- maSigPro::get.siggenes(
   vars = "groups"
 )
 
+# extract gene names from the significant profiles matrix
+# sigs$sig.genes contains results organized by comparison group (here: T21vsD21)
+# sig.profiles holds the expression profiles for genes passing the rsq threshold
 sig_genes <- rownames(sigs$sig.genes$T21vsD21$sig.profiles)
+
+# output: number of genes showing significant genotype-specific temporal patterns
+# these genes have expression trajectories that differ between conditions over time
 cat("Genes with genotype-specific temporal patterns:", length(sig_genes), "\n")
 ```
 
