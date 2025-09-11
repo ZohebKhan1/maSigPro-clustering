@@ -525,6 +525,10 @@ After identifying genes that are time-dependent and identifying genes that chang
 In the original maSigPro paper, the authors note that Rsq of 0.7 performed well. However, there have been some cases when Rsq of 0.7 has resulted in 5000+ genes that are clustered at the of this workflow. Therefore, I often use higher values (0.7+), as higher values yield more reliable genes but fewer results. Lower values (0.5-0.6) include more genes but with less confident model fits. Adjust based on your sample size and downstream goals, and you can further check the quality of the fit by individually looking at genes within each cluster to assess the fidelity of the fitting.
 
 ```{r step7-extract-sig, echo=TRUE}
+# r-squared threshold: proportion of variance explained by the regression model
+# 0.7 is the authors' recommended default (good balance of stringency and yield)
+# alternative values: 0.6 (more genes, less confident fits), 0.8 (fewer genes, higher confidence)
+# adjust based on your dataset size and downstream analysis requirements
 rsq_threshold <- 0.7
 
 sigs <- maSigPro::get.siggenes(
