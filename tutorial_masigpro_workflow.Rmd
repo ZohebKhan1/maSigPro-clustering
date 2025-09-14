@@ -564,15 +564,22 @@ My suggestion would be to test various parameters. Ideally, regardless of the pa
 | `cluster.method` | Clustering algorithm ("hclust", "kmeans") |
 
 ```{r step8-cluster, echo=TRUE, message=FALSE, warning=FALSE, fig.width=14, fig.height=10, fig.cap="maSigPro cluster visualization showing gene expression trajectories grouped by similarity."}
+# number of clusters for gene grouping
+# start with k=10 and adjust based on cluster sizes and biological interpretability
+# too many clusters may result in groups with very few genes; too few may obscure patterns
 k_clusters <- 10
 
+# remove non-numeric columns from experimental design for clustering
 edesign_clean <- design$edesign[, sapply(design$edesign, is.numeric)]
 
 clusters <- maSigPro::see.genes(
   data = sigs$sig.genes$T21vsD21,
   edesign = edesign_clean,
   k = k_clusters,
+  # distance metric: "correlation" groups genes with similar expression patterns
+  # alternative: "euclidean" considers absolute expression differences
   dis = "correlation",
+  # clustering algorithm: "hclust" (hierarchical) or "kmeans"
   cluster.method = "hclust",
   color.mode = "gray",
   show.fit = FALSE
